@@ -1,6 +1,8 @@
 import argparse
 import sys
 import configparser
+from FileManager import FileManager
+from DBManager import DBManager
 
 def help(show=False):
 	parser = argparse.ArgumentParser(description="")
@@ -29,7 +31,7 @@ def readSettings(settingsFile):
 		raise Exception("The settings file was not found!")
 	return configuration._sections
 
-def validateSettings(settings, args):
+def validateSettings(settings, args): #Improve this method
 	if args.database:
 		if "datatype" not in settings["database"] or \
 		   "server" not in settings["database"] or \
@@ -40,7 +42,8 @@ def validateSettings(settings, args):
 		   "password" not in settings["database"]:
 			return False
 	elif args.file:
-		if "sep" not in settings["achilles_results"]:
+		if "sep" not in settings["achilles_results"] or \
+		   len(args.achilles) == 0:
 			return False
 	else:
 		return False
@@ -52,10 +55,15 @@ def main():
 	args = help()
 	settings = readSettings(args.settings)
 	if validateSettings(settings, args):
+		analysisIDs = FileManager.readAnalysisID(settings["general"]["analysis_id"])
 		if args.database:
-			pass
+			header, data = DBManager.query(analysisIDs)
 		elif args.file:
-			pass
+			header, data = FileManager.readAchillesResults(args.achilles, settings["achilles_results"]["sep"], analysisIDs)
+		else:
+			help(show=True)
+			exit()		
+		FileManager.write(header, data, settings["general"]["export_location"])
 	else:
 		print("The settings.ini is not correct. Please confirm all the necessary parameters in the documentation!")
 		help(show=True)
