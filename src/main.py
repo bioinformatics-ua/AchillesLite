@@ -29,16 +29,35 @@ def readSettings(settingsFile):
 		raise Exception("The settings file was not found!")
 	return configuration._sections
 
-def validateSettings(settings):
+def validateSettings(settings, args):
+	if args.database:
+		if "datatype" not in settings["database"] or \
+		   "server" not in settings["database"] or \
+		   "database" not in settings["database"] or \
+		   "schema" not in settings["database"] or \
+		   "port" not in settings["database"] or \
+		   "user" not in settings["database"] or \
+		   "password" not in settings["database"]:
+			return False
+	elif args.file:
+		if "sep" not in settings["achilles_results"]:
+			return False
+	else:
+		return False
+	if "analysis_id" not in settings["general"]:
+		return False
 	return True
 
 def main():
 	args = help()
 	settings = readSettings(args.settings)
-	if validateSettings(settings):
-		print("TO DO")
+	if validateSettings(settings, args):
+		if args.database:
+			pass
+		elif args.file:
+			pass
 	else:
-		print("Dataset does not exist in the settings.ini")
+		print("The settings.ini is not correct. Please confirm all the necessary parameters in the documentation!")
 		help(show=True)
 		exit()
 
