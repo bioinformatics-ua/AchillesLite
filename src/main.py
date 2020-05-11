@@ -11,10 +11,10 @@ def help(show=False):
                         type=str, default="settings.ini", \
                         help='The system settings file (default: settings.ini)')	
 	configs.add_argument('-a', '--achilles', dest='achilles', type=str, default='',\
-                        help='Achiles results CSV file. If the user prefer to extract the information from the achilles_results.csv file. \
+                        help='Achilles results CSV file. If the user prefers to extract the information from the achilles_results.csv file. \
                         (Some parameters must be defined in the seetings file)')	
 
-	executionMode = parser.add_argument_group('Execution Mode', 'Chooe what is the execution mode!')
+	executionMode = parser.add_argument_group('Execution Mode', 'Choose what is the execution mode!')
 	executionMode.add_argument('-db', '--database', default=False, action='store_true', \
 							help='In this mode, the system will extract the information directly from the database (default: False)')
 	executionMode.add_argument('-f', '--file', default=False, action='store_true', \
