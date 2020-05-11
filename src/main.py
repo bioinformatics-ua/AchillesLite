@@ -57,7 +57,7 @@ def main():
 	if validateSettings(settings, args):
 		analysisIDs = FileManager.readAnalysisID(settings["general"]["analysis_id"])
 		if args.database:
-			header, data = DBManager.query(analysisIDs)
+			header, data = DBManager.query(settings["database"], analysisIDs)
 		elif args.file:
 			header, data = FileManager.readAchillesResults(args.achilles, settings["achilles_results"]["sep"], analysisIDs)
 		else:
